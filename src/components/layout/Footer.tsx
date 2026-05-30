@@ -161,11 +161,12 @@ function MarqueeSection() {
 
 /* ─── Middle Dark Section ─── */
 function MiddleDarkSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
   const wordmarkRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      if (wordmarkRef.current) {
+      if (wordmarkRef.current && sectionRef.current) {
         gsap.fromTo(
           wordmarkRef.current,
           { scale: 0.8, opacity: 1 },
@@ -174,10 +175,10 @@ function MiddleDarkSection() {
             opacity: 0.15,
             ease: "none",
             scrollTrigger: {
-              trigger: wordmarkRef.current,
+              trigger: sectionRef.current,
               start: "top bottom",
               end: "bottom top",
-              scrub: true,
+              scrub: 1,
             },
           },
         );
@@ -188,15 +189,16 @@ function MiddleDarkSection() {
 
   return (
     <div
-      className="relative overflow-hidden py-16 sm:py-20 px-4 sm:px-6"
+      ref={sectionRef}
+      className="relative py-16 sm:py-20 px-4 sm:px-6"
       style={{ background: "var(--bg1)" }}
     >
-      {/* Giant ghost wordmark — clipped so it never overflows */}
-      <div
+
+    <div
         ref={wordmarkRef}
         aria-hidden
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-        style={{ overflow: "hidden" }}
+        // style={{ overflow: "hidden" }}
       >
         <span
           className="font-black leading-none whitespace-nowrap"
@@ -274,7 +276,6 @@ function MiddleDarkSection() {
             Built with care
           </span>
         </div>
-
       </div>
     </div>
   );
