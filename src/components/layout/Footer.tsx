@@ -275,36 +275,6 @@ function MiddleDarkSection() {
           </span>
         </div>
 
-        {/* Social links — wrap on mobile */}
-        {/* <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-2">
-          {[
-            { label: "LinkedIn", url: "https://linkedin.com" },
-            { label: "GitHub", url: "https://github.com" },
-            { label: "Instagram", url: "https://instagram.com" },
-            { label: "Email", url: "mailto:tripathipawan8705@gmail.com" },
-          ].map((link) => (
-            <a
-              key={link.label}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs tracking-widest uppercase transition-colors duration-200"
-              style={{
-                fontFamily: "var(--mono)",
-                color: "var(--text3)",
-                letterSpacing: "0.2em",
-              }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLAnchorElement).style.color = "#f97316")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLAnchorElement).style.color = "")
-              }
-            >
-              {link.label}
-            </a>
-          ))}
-        </div> */}
       </div>
     </div>
   );
