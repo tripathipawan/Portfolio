@@ -7,10 +7,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const LINKS = [
   { label: "Home", id: "home" },
   { label: "About", id: "about" },
+  { label: "Services", id: "services" },
   { label: "Skills", id: "skills" },
+  { label: "Journey", id: "journey" },
   { label: "Projects", id: "projects" },
-  { label: "Experience", id: "experience" },
-  { label: "Education", id: "education" },
   { label: "Contact", id: "contact" },
 ];
 

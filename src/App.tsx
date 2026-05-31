@@ -11,9 +11,11 @@ import Hero from "./components/sections/Hero";
 const About = lazy(() => import("./components/sections/About"));
 const Skills = lazy(() => import("./components/sections/Skills"));
 const Projects = lazy(() => import("./components/sections/Projects"));
-const Experience = lazy(() => import("./components/sections/Experience"));
-const Education = lazy(() => import("./components/sections/Education"));
+// const Experience = lazy(() => import("./components/sections/Experience"));
+// const Education = lazy(() => import("./components/sections/Education"));
+const Edu_Exp = lazy(() => import("./components/sections/Journey"));
 const Contact = lazy(() => import("./components/sections/Contact"));
+const Services = lazy(() => import("./components/sections/Services"));
 
 function Skeleton() {
   return (
@@ -72,16 +74,22 @@ function Inner() {
           <About />
         </Suspense>
         <Suspense fallback={<Skeleton />}>
+          <Services />
+        </Suspense>
+        <Suspense fallback={<Skeleton />}>
           <Skills />
         </Suspense>
-        <Suspense fallback={<Skeleton />}>
-          <Projects />
-        </Suspense>
-        <Suspense fallback={<Skeleton />}>
+        {/* <Suspense fallback={<Skeleton />}>
           <Experience />
         </Suspense>
         <Suspense fallback={<Skeleton />}>
           <Education />
+        </Suspense> */}
+        <Suspense fallback={<Skeleton />}>
+          <Edu_Exp />
+        </Suspense>
+        <Suspense fallback={<Skeleton />}>
+          <Projects />
         </Suspense>
         <Suspense fallback={<Skeleton />}>
           <Contact />

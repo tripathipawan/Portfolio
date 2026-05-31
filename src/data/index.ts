@@ -175,3 +175,58 @@ export const certifications = [
     URL: "https://www.codechef.com/certificates/public/5292983",
   },
 ]
+
+ 
+// ─── Services ────────────────────────────────────────────────────────────────
+export const services = [
+  {
+    id: 1,
+    icon: "🌐",
+    title: "Web Development",
+    shortDesc: "Custom React.js apps",
+    desc: "Production-ready React.js + TypeScript applications built from scratch — responsive, performant, and pixel-perfect across all devices.",
+    color: "#6366f1",
+    tags: ["React.js", "TypeScript", "Tailwind CSS", "Vite"],
+    available: true,
+  },
+  {
+    id: 2,
+    icon: "🎨",
+    title: "UI/UX Design",
+    shortDesc: "Figma to code",
+    desc: "Translating Figma designs into smooth, animated interfaces using Framer Motion & GSAP — every micro-interaction crafted with care.",
+    color: "#10d9a0",
+    tags: ["Figma", "Framer Motion", "GSAP", "ShadCN UI"],
+    available: true,
+  },
+  {
+    id: 3,
+    icon: "🤖",
+    title: "AI Integration",
+    shortDesc: "Smarter apps with AI",
+    desc: "Integrating Claude AI, GitHub Copilot, v0 by Vercel & modern AI tools to build smarter features and accelerate development.",
+    color: "#f59e0b",
+    tags: ["Claude AI", "Copilot", "v0 by Vercel", "Bolt.new"],
+    available: true,
+  },
+  {
+    id: 4,
+    icon: "⚡",
+    title: "Performance Audit",
+    shortDesc: "Speed & Core Vitals",
+    desc: "Auditing and optimizing existing web apps — bundle size reduction, lazy loading, Core Web Vitals improvements for lightning-fast UX.",
+    color: "#f472b6",
+    tags: ["Lighthouse", "Web Vitals", "Code Splitting", "Optimization"],
+    available: true,
+  },
+  {
+    id: 5,
+    icon: "🔥",
+    title: "Firebase & APIs",
+    shortDesc: "Auth, DB & REST",
+    desc: "Full frontend + backend integration — Firebase Auth, Firestore real-time DB, and REST API wiring for production-ready apps.",
+    color: "#38bdf8",
+    tags: ["Firebase", "Firestore", "REST APIs", "Axios"],
+    available: true,
+  },
+]

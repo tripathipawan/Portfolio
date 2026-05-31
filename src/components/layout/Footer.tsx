@@ -193,8 +193,7 @@ function MiddleDarkSection() {
       className="relative py-16 sm:py-20 px-4 sm:px-6"
       style={{ background: "var(--bg1)" }}
     >
-
-    <div
+      <div
         ref={wordmarkRef}
         aria-hidden
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
@@ -286,10 +285,10 @@ export default function Footer() {
   const NAV: string[] = [
     "home",
     "about",
+    "services",
     "skills",
+    "journey",
     "projects",
-    "experience",
-    "education",
     "contact",
   ];
 
