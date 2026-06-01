@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FiSun, FiMoon, FiMenu, FiX } from "react-icons/fi";
-import { useScrollY } from "../../hooks/index";
+import { useScrollY, useActiveSection } from "../../hooks/index";
 import { useTheme } from "../../context/ThemeContext";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -14,28 +14,28 @@ const LINKS = [
   { label: "Contact", id: "contact" },
 ];
 
-function useActiveSection(): string {
-  const [active, setActive] = useState("hero");
-  useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY < 80) {
-        setActive("hero");
-        return;
-      }
-      const offsets = LINKS.map((l) => {
-        const el = document.getElementById(l.id);
-        if (!el) return { id: l.id, top: Infinity };
-        return { id: l.id, top: Math.abs(el.getBoundingClientRect().top - 80) };
-      });
-      offsets.sort((a, b) => a.top - b.top);
-      setActive(offsets[0].id);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-  return active;
-}
+// function useActiveSection(): string {
+//   const [active, setActive] = useState("hero");
+//   useEffect(() => {
+//     const onScroll = () => {
+//       if (window.scrollY < 80) {
+//         setActive("hero");
+//         return;
+//       }
+//       const offsets = LINKS.map((l) => {
+//         const el = document.getElementById(l.id);
+//         if (!el) return { id: l.id, top: Infinity };
+//         return { id: l.id, top: Math.abs(el.getBoundingClientRect().top - 80) };
+//       });
+//       offsets.sort((a, b) => a.top - b.top);
+//       setActive(offsets[0].id);
+//     };
+//     onScroll();
+//     window.addEventListener("scroll", onScroll, { passive: true });
+//     return () => window.removeEventListener("scroll", onScroll);
+//   }, []);
+//   return active;
+// }
 
 function smoothScroll(id: string): void {
   const el = document.getElementById(id);
@@ -52,9 +52,10 @@ function smoothScroll(id: string): void {
   }
 }
 
-export default function Navbar({ ready }: { ready: boolean }) {
+export default function Navbar() {
   const scrollY = useScrollY();
-  const active = useActiveSection();
+  const SECTION_IDS = LINKS.map((l) => l.id);
+  const active = useActiveSection(SECTION_IDS);
   const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
   const scrolled = scrollY > 50;
@@ -81,9 +82,7 @@ export default function Navbar({ ready }: { ready: boolean }) {
           backdropFilter: scrolled ? "blur(28px) saturate(2)" : "none",
           borderBottom: scrolled ? "1px solid var(--border)" : "none",
           transition: "background 0.3s ease, border 0.3s ease",
-          animation: ready
-            ? "navSlideDown 0.65s cubic-bezier(0.34,1.56,0.64,1) 0.1s both"
-            : "none",
+          animation: "navSlideDown 0.65s cubic-bezier(0.34,1.56,0.64,1) 0.1s both",
         }}
       >
         <div className="h-full max-w-[1280px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
@@ -106,9 +105,28 @@ export default function Navbar({ ready }: { ready: boolean }) {
                 <li key={l.id}>
                   <button
                     onClick={() => smoothScroll(l.id)}
-                    className="relative px-3 py-2 text-[13px] font-medium rounded-lg transition-colors duration-150"
+                    className="relative px-3 py-2 text-[13px] font-medium rounded-lg transition-all duration-200"
                     style={{
-                      color: isActive ? "var(--accent-h)" : "var(--text1)",
+                      color: isActive ? "var(--accent-h)" : "var(--text2)",
+                      background: isActive
+                        ? "rgba(99,102,241,0.08)"
+                        : "transparent",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLElement).style.color =
+                          "var(--text1)";
+                        (e.currentTarget as HTMLElement).style.background =
+                          "rgba(255,255,255,0.04)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        (e.currentTarget as HTMLElement).style.color =
+                          "var(--text2)";
+                        (e.currentTarget as HTMLElement).style.background =
+                          "transparent";
+                      }
                     }}
                   >
                     <span className="relative z-10">{l.label}</span>
@@ -117,7 +135,7 @@ export default function Navbar({ ready }: { ready: boolean }) {
                       style={{
                         background: "var(--accent)",
                         width: isActive ? "60%" : "0%",
-                        transition: "width 0.3s ease",
+                        transition: "width 0.25s ease",
                       }}
                     />
                   </button>

@@ -85,20 +85,55 @@ export function useScrollProgress(): number {
 }
 
 // ─── useActiveSection ──────────────────────────────────────────────────────
+// export function useActiveSection(ids: string[]): string {
+//   const [active, setActive] = useState(ids[0] || '')
+//   useEffect(() => {
+//     const obs = ids.map(id => {
+//       const el = document.getElementById(id)
+//       if (!el) return null
+//       const o = new IntersectionObserver(
+//         ([e]) => { if (e.isIntersecting) setActive(id) },
+//         { threshold: 0.15, rootMargin: '-10% 0px -50% 0px' }
+//       )
+//       o.observe(el); return o
+//     })
+//     return () => obs.forEach(o => o?.disconnect())
+//   }, [ids.join(',')])
+//   return active
+// }
+
+
 export function useActiveSection(ids: string[]): string {
   const [active, setActive] = useState(ids[0] || '')
+
   useEffect(() => {
-    const obs = ids.map(id => {
-      const el = document.getElementById(id)
-      if (!el) return null
-      const o = new IntersectionObserver(
-        ([e]) => { if (e.isIntersecting) setActive(id) },
-        { threshold: 0.25, rootMargin: '-20% 0px -60% 0px' }
-      )
-      o.observe(el); return o
-    })
-    return () => obs.forEach(o => o?.disconnect())
+    const onScroll = () => {
+      if (window.scrollY < 100) {
+        setActive(ids[0])
+        return
+      }
+      let closest = ids[0]
+      let minDist = Infinity
+
+      ids.forEach(id => {
+        const el = document.getElementById(id)
+        if (!el) return
+        const top = el.getBoundingClientRect().top
+        const dist = Math.abs(top - 80)
+        if (dist < minDist) {
+          minDist = dist
+          closest = id
+        }
+      })
+
+      setActive(closest)
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [ids.join(',')])
+
   return active
 }
 

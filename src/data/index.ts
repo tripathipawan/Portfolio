@@ -98,9 +98,9 @@ export const projects = [
 
 
   {
-    id: 4, emoji: "🌈", title: "Color Pallate website", featured: false,
+    id: 4, emoji: "🌈", title: "Color Palette website", featured: false,
     image: "/projects/colorpalette.png",
-    desc: "Pixel-perfect Nike landing page with smooth animations and premium feel showcasing advanced Tailwind.",
+    desc: "A color palette generator and explorer built with Supabase — browse, save, and share beautiful color combinations.",
     tech: ["Supabase", "React.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Lucide Icons"],
     github: "https://github.com/tripathipawan/Color_Picker_Website",
     live: "https://paletteflow-studio.vercel.app/",

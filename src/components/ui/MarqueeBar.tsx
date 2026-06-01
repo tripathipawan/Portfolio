@@ -9,6 +9,7 @@ import {
   SiMongodb,
   SiGithub,
   SiJavascript,
+  SiFirebase,
 } from "react-icons/si";
 
 const SKILLS = [
@@ -21,10 +22,10 @@ const SKILLS = [
   { label: "REDUX", Icon: SiRedux },
   { label: "MONGODB", Icon: SiMongodb },
   { label: "GITHUB", Icon: SiGithub },
-  { label: "FIREBASE", Icon: FaFire },
+  { label: "FIREBASE", Icon: SiFirebase },
   { label: "JAVASCRIPT", Icon: SiJavascript },
-  { label: "CSS3", Icon: FaCss3Alt }, // ✅ SiCss3 → FaCss3Alt
-  { label: "HTML5", Icon: FaHtml5 }, // ✅ SiHtml5 → FaHtml5
+  { label: "CSS3", Icon: FaCss3Alt },
+  { label: "HTML5", Icon: FaHtml5 },
   { label: "GIT", Icon: FaGitAlt },
 ];
 

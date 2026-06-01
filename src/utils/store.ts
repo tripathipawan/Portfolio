@@ -4,10 +4,6 @@ interface Draft {
   [key: string]: string
 }
 
-interface Submission extends Draft {
-  ts: string
-}
-
 export const store = {
   get: <T>(k: string, fb: T): T => {
     try {
@@ -32,20 +28,9 @@ export const store = {
       console.log(e)
     }
   },
-  visits(): number {
-    const n = (store.get<number>('visits', 0) + 1)
-    store.set('visits', n)
-    store.set('last', new Date().toISOString())
-    return n
-  },
   draft: {
     save: (d: Draft) => store.set('draft', d),
     get: () => store.get<Draft>('draft', {}),
     clear: () => store.rm('draft'),
-  },
-  submit(d: Draft) {
-    const l = store.get<Submission[]>('subs', [])
-    l.push({ ...d, ts: new Date().toISOString() })
-    store.set('subs', l)
   },
 }

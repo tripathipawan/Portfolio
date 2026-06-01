@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import { useScrollProgress } from "./hooks/index";
-// import Loader from "./components/ui/Loader";
 import MarqueeBar from "./components/ui/MarqueeBar";
 import Navbar from "./components/layout/Navbar";
 import { ScrollToTop } from "./components/layout/Footer";
@@ -11,8 +10,6 @@ import Hero from "./components/sections/Hero";
 const About = lazy(() => import("./components/sections/About"));
 const Skills = lazy(() => import("./components/sections/Skills"));
 const Projects = lazy(() => import("./components/sections/Projects"));
-// const Experience = lazy(() => import("./components/sections/Experience"));
-// const Education = lazy(() => import("./components/sections/Education"));
 const Edu_Exp = lazy(() => import("./components/sections/Journey"));
 const Contact = lazy(() => import("./components/sections/Contact"));
 const Services = lazy(() => import("./components/sections/Services"));
@@ -64,9 +61,8 @@ function ProgressBar() {
 function Inner() {
   return (
     <>
-      {/* <Loader onDone={() => {}} /> */}
       <ProgressBar />
-      <Navbar ready={true} />
+      <Navbar />
       <main>
         <Hero />
         <MarqueeBar />
@@ -79,12 +75,6 @@ function Inner() {
         <Suspense fallback={<Skeleton />}>
           <Skills />
         </Suspense>
-        {/* <Suspense fallback={<Skeleton />}>
-          <Experience />
-        </Suspense>
-        <Suspense fallback={<Skeleton />}>
-          <Education />
-        </Suspense> */}
         <Suspense fallback={<Skeleton />}>
           <Edu_Exp />
         </Suspense>
