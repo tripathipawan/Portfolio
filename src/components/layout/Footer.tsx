@@ -5,7 +5,6 @@ import {
   FaLinkedin,
   FaYoutube,
   FaInstagram,
-  FaCodepen,
   FaWhatsapp,
   FaFacebook,
 } from "react-icons/fa";
@@ -23,7 +22,6 @@ const ICON_MAP: Record<string, IconType> = {
   FaLinkedin,
   FaYoutube,
   FaInstagram,
-  FaCodepen,
   FaWhatsapp,
   FaFacebook,
 };
