@@ -62,8 +62,6 @@ body,
   max-width: 100%;
 }
 
-/* ⚡ REMOVED: global scroll-behavior:smooth — causes compositor lag */
-
 body {
   font-family: var(--font);
   background: var(--bg0);
@@ -168,8 +166,6 @@ button {
   animation: blink 2s step-end infinite;
 }
 
-/* ─── Reveal system: CSS-only, no React state ─────────────────────────────── */
-/* ⚡ opacity + translate3d = GPU composited = zero layout recalc             */
 .rv {
   opacity: 0;
   transform: translate3d(0, 24px, 0);
@@ -182,7 +178,6 @@ button {
   opacity: 1;
   transform: translate3d(0, 0, 0);
   will-change: auto;
-  /* ⚡ release GPU layer after animation */
 }
 
 .rv-l {
@@ -198,8 +193,6 @@ button {
   transform: translate3d(0, 0, 0);
 }
 
-/* ─── Card hover: translate3d ONLY — no box-shadow, no border changes ──────── */
-/* ⚡ box-shadow changes trigger repaint → jank. translate3d stays on GPU      */
 .hover-lift {
   transition: transform 0.2s ease;
   will-change: transform;
@@ -218,7 +211,7 @@ button {
   transform: translate3d(4px, 0, 0);
 }
 
-/* ─── Marquee ────────────────────────────────────────────────────────────── */
+/* ─── Marquee  */
 .marquee-track {
   display: flex;
   width: max-content;
@@ -231,7 +224,7 @@ button {
   animation-play-state: paused;
 }
 
-/* ─── Skill pill hover ───────────────────────────────────────────────────── */
+/* ─── Skill pill hover */
 .skill-pill {
   transition: transform 0.15s ease;
 }
@@ -240,7 +233,7 @@ button {
   transform: scale(1.07) translate3d(0, -2px, 0);
 }
 
-/* ─── Social sidebar ────────────────────────────────────────────────────── */
+/* ─── Social sidebar */
 .social-sidebar {
   position: fixed;
   left: 20px;
@@ -261,7 +254,7 @@ button {
   margin-top: 8px;
 }
 
-/* ─── Form fields ───────────────────────────────────────────────────────── */
+/* ─── Form fields */
 .field {
   width: 100%;
   padding: 12px 16px;
@@ -290,7 +283,7 @@ button {
   border-color: rgba(248, 113, 113, 0.6);
 }
 
-/* ─── Skill fill bar ────────────────────────────────────────────────────── */
+/* ─── Skill fill bar */
 .skill-fill {
   height: 100%;
   border-radius: 4px;
@@ -314,8 +307,8 @@ button {
   width: var(--w);
 }
 
-/* ─── Keyframes ─────────────────────────────────────────────────────────── */
-/* ⚡ All keyframes use transform/opacity only — no layout props              */
+/* ─── Keyframes  */
+
 @keyframes blink {
 
   0%,

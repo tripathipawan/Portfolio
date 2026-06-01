@@ -380,7 +380,6 @@ export default function ProjectsSection() {
       className="relative md:overflow-hidden"
       style={{ background: "var(--bg1)" }}
     >
-      {/* ── DESKTOP layout (426px+): original pinned horizontal scroll ── */}
       <div
         className="hidden min-[426px]:flex flex-col"
         style={{ minHeight: "100vh" }}
@@ -516,7 +515,6 @@ export default function ProjectsSection() {
         </div>
       </div>
 
-      {/* ── MOBILE layout (≤425px): vertical stack, no GSAP ── */}
       <div className="flex flex-col min-[426px]:hidden px-4 pt-16 pb-10">
         {/* Heading */}
         <div className="mb-8">
@@ -564,7 +562,6 @@ export default function ProjectsSection() {
             );
           })}
 
-          {/* More Projects CTA — mobile */}
           <a
             href="https://github.com/tripathipawan"
             target="_blank"

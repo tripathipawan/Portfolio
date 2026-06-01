@@ -129,7 +129,6 @@ function MarqueeSection() {
       className="overflow-hidden py-4"
       style={{ borderBottom: "1px solid var(--border)" }}
     >
-      {/* CSS-only marquee using existing marquee-track class from index.css */}
       <div className="marquee-track">
         {items.map((item, i) => (
           <span
@@ -197,7 +196,6 @@ function MiddleDarkSection() {
         ref={wordmarkRef}
         aria-hidden
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-        // style={{ overflow: "hidden" }}
       >
         <span
           className="font-black leading-none whitespace-nowrap"

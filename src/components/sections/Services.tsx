@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { services } from "../../data/index";
 
-// ── Types ──────────────────────────────────────────────────────────────────
+// ── Types
 interface Service {
   id: number;
   icon: string;
@@ -15,7 +15,8 @@ interface Service {
   available: boolean;
 }
 
-// ── Framer variants ────────────────────────────────────────────────────────
+// ── Framer variants
+
 const containerVariants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.08 } },
@@ -40,7 +41,7 @@ const miniVariants = {
   },
 };
 
-// ── Section Header ─────────────────────────────────────────────────────────
+// ── Section Header
 function SectionHeader() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
@@ -89,7 +90,6 @@ function SectionHeader() {
   );
 }
 
-// ── Hero Card (first service — full width) ─────────────────────────────────
 function HeroCard({ service }: { service: Service }) {
   const [hovered, setHovered] = useState(false);
 
@@ -227,7 +227,8 @@ function HeroCard({ service }: { service: Service }) {
   );
 }
 
-// ── Mini Card ──────────────────────────────────────────────────────────────
+// ── Mini Card
+
 function MiniCard({ service, index }: { service: Service; index: number }) {
   const [hovered, setHovered] = useState(false);
 
@@ -331,7 +332,8 @@ function MiniCard({ service, index }: { service: Service; index: number }) {
   );
 }
 
-// ── Bottom Stats Row ───────────────────────────────────────────────────────
+// ── Bottom Stats Row
+
 function StatsRow() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
@@ -378,50 +380,8 @@ function StatsRow() {
   );
 }
 
-// ── CTA Row ────────────────────────────────────────────────────────────────
-// function CTARow() {
-//   const ref = useRef(null);
-//   const inView = useInView(ref, { once: true });
+// ── Main Component
 
-//   return (
-//     <motion.div
-//       ref={ref}
-//       initial={{ opacity: 0, y: 16 }}
-//       animate={inView ? { opacity: 1, y: 0 } : {}}
-//       transition={{ duration: 0.5, delay: 0.45 }}
-//       className="mt-10 flex flex-col sm:flex-row items-center gap-4"
-//     >
-//       <a
-//         href="#contact"
-//         className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl font-bold text-sm text-white transition-all duration-200 hover:-translate-y-1"
-//         style={{
-//           background: "linear-gradient(135deg, var(--accent), var(--accent-h))",
-//           boxShadow: "0 4px 24px var(--accent-glow)",
-//           fontFamily: "var(--font)",
-//         }}
-//       >
-//         Hire Me
-//         <span style={{ animation: "nudgeRight 1.6s ease infinite" }}>→</span>
-//       </a>
-
-//       <a
-//         href="#projects"
-//         className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl font-bold text-sm transition-all duration-200 hover:-translate-y-1"
-//         style={{
-//           background: "linear-gradient(145deg, var(--bg2), var(--bg3))",
-//           border: "1px solid var(--border)",
-//           boxShadow: "var(--neu-out-sm)",
-//           color: "var(--text2)",
-//           fontFamily: "var(--font)",
-//         }}
-//       >
-//         View Projects
-//       </a>
-//     </motion.div>
-//   );
-// }
-
-// ── Main Component ─────────────────────────────────────────────────────────
 export default function Services() {
   const gridRef = useRef(null);
   const inView = useInView(gridRef, { once: true, margin: "-60px" });
@@ -448,7 +408,7 @@ export default function Services() {
       <div className="section-wrap relative z-10">
         <SectionHeader />
 
-        {/* ── Bento Grid ──────────────────────────────────────────────── */}
+        {/* ── Bento Grid */}
         <motion.div
           ref={gridRef}
           variants={containerVariants}
@@ -469,9 +429,6 @@ export default function Services() {
 
         {/* Stats */}
         <StatsRow />
-
-        {/* CTA */}
-        {/* <CTARow /> */}
       </div>
     </section>
   );

@@ -14,29 +14,6 @@ const LINKS = [
   { label: "Contact", id: "contact" },
 ];
 
-// function useActiveSection(): string {
-//   const [active, setActive] = useState("hero");
-//   useEffect(() => {
-//     const onScroll = () => {
-//       if (window.scrollY < 80) {
-//         setActive("hero");
-//         return;
-//       }
-//       const offsets = LINKS.map((l) => {
-//         const el = document.getElementById(l.id);
-//         if (!el) return { id: l.id, top: Infinity };
-//         return { id: l.id, top: Math.abs(el.getBoundingClientRect().top - 80) };
-//       });
-//       offsets.sort((a, b) => a.top - b.top);
-//       setActive(offsets[0].id);
-//     };
-//     onScroll();
-//     window.addEventListener("scroll", onScroll, { passive: true });
-//     return () => window.removeEventListener("scroll", onScroll);
-//   }, []);
-//   return active;
-// }
-
 function smoothScroll(id: string): void {
   const el = document.getElementById(id);
   if (!el) return;

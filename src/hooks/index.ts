@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react'
 
-// ─── useCSSReveal ──────────────────────────────────────────────────────────
+// ─── useCSSReveal
+
 export function useCSSReveal(
   selector: string,
   rootRef: React.RefObject<Element> | null = null
@@ -23,7 +24,8 @@ export function useCSSReveal(
   }, [])
 }
 
-// ─── useInView ─────────────────────────────────────────────────────────────
+// ─── useInView
+
 interface InViewOptions {
   threshold?: number
   margin?: string
@@ -46,7 +48,8 @@ export function useInView(
   return [ref, inView]
 }
 
-// ─── useScrollY ────────────────────────────────────────────────────────────
+// ─── useScrollY
+
 export function useScrollY(): number {
   const [y, setY] = useState(0)
   const ticking = useRef(false)
@@ -63,7 +66,8 @@ export function useScrollY(): number {
   return y
 }
 
-// ─── useScrollProgress ─────────────────────────────────────────────────────
+// ─── useScrollProgress
+
 export function useScrollProgress(): number {
   const [p, setP] = useState(0)
   const ticking = useRef(false)
@@ -83,25 +87,6 @@ export function useScrollProgress(): number {
   }, [])
   return p
 }
-
-// ─── useActiveSection ──────────────────────────────────────────────────────
-// export function useActiveSection(ids: string[]): string {
-//   const [active, setActive] = useState(ids[0] || '')
-//   useEffect(() => {
-//     const obs = ids.map(id => {
-//       const el = document.getElementById(id)
-//       if (!el) return null
-//       const o = new IntersectionObserver(
-//         ([e]) => { if (e.isIntersecting) setActive(id) },
-//         { threshold: 0.15, rootMargin: '-10% 0px -50% 0px' }
-//       )
-//       o.observe(el); return o
-//     })
-//     return () => obs.forEach(o => o?.disconnect())
-//   }, [ids.join(',')])
-//   return active
-// }
-
 
 export function useActiveSection(ids: string[]): string {
   const [active, setActive] = useState(ids[0] || '')
@@ -137,7 +122,8 @@ export function useActiveSection(ids: string[]): string {
   return active
 }
 
-// ─── useTyped ──────────────────────────────────────────────────────────────
+// ─── useTyped
+
 interface TypedOptions {
   typeSpeed?: number
   deleteSpeed?: number
