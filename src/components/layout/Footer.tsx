@@ -332,7 +332,7 @@ export default function Footer() {
                   }
                 >
                   {id === "projects"
-                    ? "Work"
+                    ? "Projects"
                     : id.charAt(0).toUpperCase() + id.slice(1)}
                 </Link>
               ))}
