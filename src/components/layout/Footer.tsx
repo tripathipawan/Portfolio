@@ -1,4 +1,3 @@
-import { Link } from "react-scroll";
 import type { IconType } from "react-icons";
 import {
   FaGithub,
@@ -11,11 +10,6 @@ import {
 import { personal, socials } from "../../data/index";
 import { useScrollY, useScrollProgress } from "../../hooks/index";
 import type { MouseEvent } from "react";
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const ICON_MAP: Record<string, IconType> = {
   FaGithub,
@@ -107,7 +101,12 @@ export function ScrollToTop() {
   );
 }
 
-/* ─── Marquee Section ─── */
+function smoothScroll(id: string): void {
+  const el = document.getElementById(id);
+  if (!el) return;
+  window.scrollTo({ top: el.offsetTop - 64, behavior: "smooth" });
+}
+
 function MarqueeSection() {
   const items = [
     "Open to collaborations",
@@ -121,7 +120,6 @@ function MarqueeSection() {
     "Based in India",
     "Let's build something incredible",
   ];
-
   return (
     <div
       className="overflow-hidden py-4"
@@ -156,42 +154,13 @@ function MarqueeSection() {
   );
 }
 
-/* ─── Middle Dark Section ─── */
 function MiddleDarkSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const wordmarkRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      if (wordmarkRef.current && sectionRef.current) {
-        gsap.fromTo(
-          wordmarkRef.current,
-          { scale: 0.8, opacity: 1 },
-          {
-            scale: 1.05,
-            opacity: 0.15,
-            ease: "none",
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1,
-            },
-          },
-        );
-      }
-    });
-    return () => ctx.revert();
-  }, []);
-
   return (
     <div
-      ref={sectionRef}
       className="relative py-16 sm:py-20 px-4 sm:px-6"
       style={{ background: "var(--bg1)" }}
     >
       <div
-        ref={wordmarkRef}
         aria-hidden
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
       >
@@ -201,7 +170,7 @@ function MiddleDarkSection() {
             fontFamily: "'Georgia', 'Times New Roman', serif",
             fontSize: "clamp(3rem, 12vw, 13rem)",
             color: "var(--text4)",
-            opacity: 0.3,
+            opacity: 0.08,
             letterSpacing: "-0.02em",
             maxWidth: "100%",
             display: "block",
@@ -210,10 +179,7 @@ function MiddleDarkSection() {
           Pawan Tripathi
         </span>
       </div>
-
-      {/* Foreground content */}
       <div className="relative z-10 flex flex-col items-center text-center gap-4 sm:gap-5">
-        {/* Diamond logo */}
         <div
           className="w-11 h-11 sm:w-12 sm:h-12 border-2 flex items-center justify-center mb-1"
           style={{
@@ -227,8 +193,6 @@ function MiddleDarkSection() {
             style={{ background: "#f97316", transform: "rotate(-45deg)" }}
           />
         </div>
-
-        {/* Name — uses theme text color */}
         <h2
           className="font-black leading-tight w-full"
           style={{
@@ -241,8 +205,6 @@ function MiddleDarkSection() {
         >
           Pawan Tripathi
         </h2>
-
-        {/* Subtitle */}
         <p
           className="text-xs tracking-widest uppercase"
           style={{
@@ -253,8 +215,6 @@ function MiddleDarkSection() {
         >
           React Developer &amp; TypeScript Developer
         </p>
-
-        {/* Built with care */}
         <div className="flex items-center gap-2">
           <span
             className="w-2 h-2 rounded-full flex-shrink-0"
@@ -276,61 +236,53 @@ function MiddleDarkSection() {
   );
 }
 
-/* ─── Main Footer ─── */
-export default function Footer() {
-  const NAV: string[] = [
-    "home",
-    "about",
-    "services",
-    "skills",
-    "journey",
-    "projects",
-    "contact",
-  ];
+const NAV: string[] = [
+  "home",
+  "about",
+  "services",
+  "skills",
+  "journey",
+  "projects",
+  "contact",
+];
 
+export default function Footer() {
   return (
     <footer style={{ borderTop: "1px solid var(--border)" }}>
-      {/* 1. Marquee */}
       <MarqueeSection />
-
-      {/* 2. Middle Dark Section */}
       <MiddleDarkSection />
-
-      {/* 3. Original Footer — same to same */}
       <div className="py-10 px-6">
         <div className="max-w-[1180px] mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-            <Link to="hero" smooth duration={700} className="cursor-pointer">
+            <button
+              onClick={() => smoothScroll("home")}
+              className="cursor-pointer"
+            >
               <span
                 className="text-2xl font-black g-text"
                 style={{ fontFamily: "var(--font)" }}
               >
                 Pawan Tripathi
               </span>
-            </Link>
+            </button>
             <div className="flex flex-wrap justify-center gap-1">
               {NAV.map((id: string) => (
-                <Link
+                <button
                   key={id}
-                  to={id}
-                  smooth
-                  duration={700}
-                  offset={-64}
+                  onClick={() => smoothScroll(id)}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer capitalize transition-colors duration-200"
                   style={{ color: "var(--text3)" }}
-                  onMouseEnter={(e: MouseEvent<HTMLElement>) =>
-                    ((e.currentTarget as HTMLElement).style.color =
+                  onMouseEnter={(e: MouseEvent<HTMLButtonElement>) =>
+                    ((e.currentTarget as HTMLButtonElement).style.color =
                       "var(--text1)")
                   }
-                  onMouseLeave={(e: MouseEvent<HTMLElement>) =>
-                    ((e.currentTarget as HTMLElement).style.color =
+                  onMouseLeave={(e: MouseEvent<HTMLButtonElement>) =>
+                    ((e.currentTarget as HTMLButtonElement).style.color =
                       "var(--text3)")
                   }
                 >
-                  {id === "projects"
-                    ? "Projects"
-                    : id.charAt(0).toUpperCase() + id.slice(1)}
-                </Link>
+                  {id.charAt(0).toUpperCase() + id.slice(1)}
+                </button>
               ))}
             </div>
             <div className="flex gap-2 justify-center flex-wrap">

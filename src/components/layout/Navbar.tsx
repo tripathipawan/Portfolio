@@ -2,7 +2,6 @@ import { useState } from "react";
 import { FiSun, FiMoon, FiMenu, FiX } from "react-icons/fi";
 import { useScrollY, useActiveSection } from "../../hooks/index";
 import { useTheme } from "../../context/ThemeContext";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const LINKS = [
   { label: "Home", id: "home" },
@@ -17,16 +16,7 @@ const LINKS = [
 function smoothScroll(id: string): void {
   const el = document.getElementById(id);
   if (!el) return;
-
-  const st = ScrollTrigger.getAll().find(
-    (t) => t.trigger === el || t.pin === el,
-  );
-
-  if (st) {
-    window.scrollTo({ top: st.start, behavior: "smooth" });
-  } else {
-    window.scrollTo({ top: el.offsetTop - 64, behavior: "smooth" });
-  }
+  window.scrollTo({ top: el.offsetTop - 64, behavior: "smooth" });
 }
 
 export default function Navbar() {
@@ -59,7 +49,8 @@ export default function Navbar() {
           backdropFilter: scrolled ? "blur(28px) saturate(2)" : "none",
           borderBottom: scrolled ? "1px solid var(--border)" : "none",
           transition: "background 0.3s ease, border 0.3s ease",
-          animation: "navSlideDown 0.65s cubic-bezier(0.34,1.56,0.64,1) 0.1s both",
+          animation:
+            "navSlideDown 0.65s cubic-bezier(0.34,1.56,0.64,1) 0.1s both",
         }}
       >
         <div className="h-full max-w-[1280px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
