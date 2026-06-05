@@ -7,16 +7,18 @@ import { ScrollToTop } from "./components/layout/Footer";
 import Footer from "./components/layout/Footer";
 import Hero from "./components/sections/Hero";
 
+// ── Lazy load all below-the-fold sections (reduces initial JS parse time) ──
 const About = lazy(() => import("./components/sections/About"));
-const Skills = lazy(() => import("./components/sections/Skills"));
-const Projects = lazy(() => import("./components/sections/Projects"));
-const Edu_Exp = lazy(() => import("./components/sections/Journey"));
-const Contact = lazy(() => import("./components/sections/Contact"));
 const Services = lazy(() => import("./components/sections/Services"));
+const Skills = lazy(() => import("./components/sections/Skills"));
+const Edu_Exp = lazy(() => import("./components/sections/Journey"));
+const Projects = lazy(() => import("./components/sections/Projects"));
+const Contact = lazy(() => import("./components/sections/Contact"));
 
+// ── Lightweight skeleton — avoids layout shift during lazy load ──
 function Skeleton() {
   return (
-    <div className="section-wrap">
+    <div className="section-wrap" aria-hidden="true">
       <div className="flex flex-col gap-4">
         {[1, 2, 3].map((i) => (
           <div
@@ -42,11 +44,14 @@ function Skeleton() {
   );
 }
 
+// ── Scroll progress bar at top ──
 function ProgressBar() {
   const p = useScrollProgress();
   return (
     <div
       className="fixed top-0 left-0 z-[300] h-[3px] rounded-r-full"
+      aria-hidden="true"
+      role="presentation"
       style={{
         width: `${p * 100}%`,
         background:
@@ -63,9 +68,19 @@ function Inner() {
     <>
       <ProgressBar />
       <Navbar />
-      <main>
+      {/* ── a11y: skip to main content link ── */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-20 focus:left-4 focus:z-[400] focus:px-4 focus:py-2 focus:rounded-lg focus:text-white focus:font-bold"
+        style={{ background: "var(--accent)" }}
+      >
+        Skip to main content
+      </a>
+
+      <main id="main-content">
         <Hero />
         <MarqueeBar />
+
         <Suspense fallback={<Skeleton />}>
           <About />
         </Suspense>
@@ -90,6 +105,7 @@ function Inner() {
     </>
   );
 }
+
 export default function App() {
   return (
     <ThemeProvider>

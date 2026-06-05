@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { personal, socials } from "../../data/index";
 import type { IconType } from "react-icons";
 import {
@@ -23,17 +23,57 @@ const SOCIAL_ICONS: Record<string, IconType> = {
 };
 
 export default function About() {
-  const secRef = useRef<HTMLElement>(null);
-  const imgRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
+  // ── FIXED: Cache rect to avoid forced reflow on every mousemove ──
+  const cardRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+  const rafRef = useRef<number | null>(null);
 
-  void secRef;
-  void imgRef;
-  void textRef;
+  // Read rect once on mouseenter (not on every mousemove)
+  const handleMouseEnter = useCallback(() => {
+    if (cardRef.current) {
+      rectRef.current = cardRef.current.getBoundingClientRect();
+    }
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (rafRef.current) return; // throttle via rAF
+    const rect = rectRef.current;
+    if (!rect || !cardRef.current) return;
+
+    rafRef.current = requestAnimationFrame(() => {
+      const el = cardRef.current;
+      if (!el || !rect) {
+        rafRef.current = null;
+        return;
+      }
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const dx = (x - rect.width / 2) / (rect.width / 2);
+      const dy = (y - rect.height / 2) / (rect.height / 2);
+      el.style.transform = `perspective(700px) rotateY(${dx * 5}deg) rotateX(${-dy * 5}deg)`;
+      el.style.setProperty("--mx", `${(x / rect.width) * 100}%`);
+      el.style.setProperty("--my", `${(y / rect.height) * 100}%`);
+      rafRef.current = null;
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      rectRef.current = null;
+      e.currentTarget.style.transform =
+        "perspective(700px) rotateY(0deg) rotateX(0deg)";
+    },
+    [],
+  );
 
   return (
     <section
       id="about"
+      aria-labelledby="about-heading"
       style={{ background: "var(--bg1)", overflow: "hidden" }}
     >
       <div className="section-wrap">
@@ -41,6 +81,7 @@ export default function About() {
           <div
             className="flex items-center gap-2 text-xs font-bold tracking-[0.12em] uppercase mb-3"
             style={{ color: "var(--accent-h)" }}
+            aria-hidden="true"
           >
             <span
               className="inline-block w-7 h-0.5 rounded-full"
@@ -49,6 +90,7 @@ export default function About() {
             About Me
           </div>
           <h2
+            id="about-heading"
             className="font-black leading-tight tracking-tight text-[clamp(2rem,4.5vw,3.2rem)]"
             style={{ fontFamily: "var(--font)" }}
           >
@@ -57,16 +99,16 @@ export default function About() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-10 items-start">
-          {/* Image Card */}
+          {/* ── Image Card ── */}
           <div className="flex flex-col items-center lg:items-start gap-6">
             <div className="relative w-full max-w-[320px] mx-auto lg:mx-0">
               <style>{`
                 @keyframes aboutCardEntry { from{opacity:0;transform:translateY(24px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
                 @keyframes aboutGlowPulse { 0%,100%{opacity:0.25} 50%{opacity:0.45} }
                 @keyframes aboutNameEntry { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-                .about-card { animation:aboutCardEntry 0.75s cubic-bezier(0.22,1,0.36,1) both; transform-style:preserve-3d; transition:transform 0.3s cubic-bezier(0.22,1,0.36,1); }
+                .about-card { animation:aboutCardEntry 0.75s cubic-bezier(0.22,1,0.36,1) both; transform-style:preserve-3d; transition:transform 0.3s cubic-bezier(0.22,1,0.36,1); will-change:transform; }
                 .about-card-glow { position:absolute; inset:-1px; border-radius:1rem; z-index:0; background:conic-gradient(from 0deg,transparent 20%,var(--accent) 40%,var(--green) 60%,transparent 80%); animation:aboutGlowPulse 3s ease-in-out infinite; }
-                .about-card-img img { transition:transform 0.5s cubic-bezier(0.22,1,0.36,1); }
+                .about-card-img img { transition:transform 0.5s cubic-bezier(0.22,1,0.36,1); will-change:transform; }
                 .about-card:hover .about-card-img img { transform:scale(1.04); }
                 .about-spotlight { position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:20; opacity:0; transition:opacity 0.3s; background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,0.06),transparent 70%); }
                 .about-card:hover .about-spotlight { opacity:1; }
@@ -77,8 +119,9 @@ export default function About() {
                 className="relative"
                 style={{ padding: "1px", borderRadius: "1rem" }}
               >
-                <div className="about-card-glow" />
+                <div aria-hidden="true" className="about-card-glow" />
                 <div
+                  ref={cardRef}
                   className="about-card relative rounded-2xl overflow-hidden z-10"
                   style={{
                     background: "linear-gradient(145deg,var(--bg2),var(--bg3))",
@@ -86,29 +129,22 @@ export default function About() {
                     border: "1px solid var(--border)",
                     padding: "6px",
                   }}
-                  onMouseMove={(e) => {
-                    const el = e.currentTarget;
-                    const rect = el.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const dx = (x - rect.width / 2) / (rect.width / 2);
-                    const dy = (y - rect.height / 2) / (rect.height / 2);
-                    el.style.transform = `perspective(700px) rotateY(${dx * 5}deg) rotateX(${-dy * 5}deg)`;
-                    el.style.setProperty("--mx", `${(x / rect.width) * 100}%`);
-                    el.style.setProperty("--my", `${(y / rect.height) * 100}%`);
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform =
-                      "perspective(700px) rotateY(0deg) rotateX(0deg)";
-                  }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  <div className="about-spotlight" />
+                  <div aria-hidden="true" className="about-spotlight" />
                   <div className="about-card-img relative overflow-hidden rounded-xl">
+                    {/* ── FIXED: loading="lazy" (below fold), explicit dimensions ── */}
                     <img
                       src={MYImg}
-                      alt={personal.name}
+                      alt={`${personal.name} — ${personal.role} from ${personal.location}`}
                       className="w-full object-cover object-top block"
                       style={{ aspectRatio: "4/5" }}
+                      loading="lazy"
+                      decoding="async"
+                      width={308}
+                      height={385}
                     />
                   </div>
                   <div
@@ -141,8 +177,10 @@ export default function About() {
                         background: "rgba(16,217,160,0.12)",
                         border: "1px solid rgba(16,217,160,0.25)",
                       }}
+                      aria-label="Availability: Available for work"
                     >
                       <span
+                        aria-hidden="true"
                         className="w-1.5 h-1.5 rounded-full bg-emerald-400"
                         style={{ animation: "blink 1.5s ease infinite" }}
                       />
@@ -158,8 +196,12 @@ export default function About() {
               </div>
             </div>
 
-            {/* Socials */}
-            <div className="flex flex-wrap gap-2.5 justify-center lg:justify-start">
+            {/* Social links */}
+            <div
+              className="flex flex-wrap gap-2.5 justify-center lg:justify-start"
+              role="list"
+              aria-label="Social media links"
+            >
               {socials.map((s) => {
                 const Icon = SOCIAL_ICONS[s.icon];
                 return (
@@ -168,7 +210,8 @@ export default function About() {
                     href={s.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    title={s.name}
+                    aria-label={`Visit ${personal.name} on ${s.name} (opens in new tab)`}
+                    role="listitem"
                     className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:-translate-y-1"
                     style={{
                       background:
@@ -178,14 +221,14 @@ export default function About() {
                       color: s.color,
                     }}
                   >
-                    {Icon && <Icon size={15} />}
+                    {Icon && <Icon size={15} aria-hidden="true" />}
                   </a>
                 );
               })}
             </div>
           </div>
 
-          {/* Text Content */}
+          {/* ── Text Content ── */}
           <div className="flex flex-col gap-7">
             <p
               className="text-[1rem] leading-[1.9]"
@@ -193,7 +236,7 @@ export default function About() {
             >
               {personal.Aboutbio}
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 { label: "Location", value: personal.location, icon: "📍" },
                 { label: "Email", value: personal.email, icon: "✉️" },
@@ -210,6 +253,7 @@ export default function About() {
                   }}
                 >
                   <div
+                    aria-hidden="true"
                     className="w-8 h-8 rounded-lg text-sm flex items-center justify-center flex-shrink-0"
                     style={{
                       background:
@@ -220,22 +264,22 @@ export default function About() {
                     {item.icon}
                   </div>
                   <div className="min-w-0">
-                    <p
+                    <dt
                       className="text-[10px] uppercase tracking-wider font-semibold mb-0.5"
                       style={{ color: "var(--text3)" }}
                     >
                       {item.label}
-                    </p>
-                    <p
+                    </dt>
+                    <dd
                       className="text-[0.82rem] font-semibold truncate"
                       style={{ color: "var(--text1)" }}
                     >
                       {item.value}
-                    </p>
+                    </dd>
                   </div>
                 </div>
               ))}
-            </div>
+            </dl>
           </div>
         </div>
       </div>

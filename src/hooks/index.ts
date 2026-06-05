@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react'
 
-// ─── useCSSReveal
+// ─── useCSSReveal ──────────────────────────────────────────────
 
 export function useCSSReveal(
   selector: string,
@@ -24,7 +24,7 @@ export function useCSSReveal(
   }, [])
 }
 
-// ─── useInView
+// ─── useInView ─────────────────────────────────────────────────
 
 interface InViewOptions {
   threshold?: number
@@ -48,7 +48,7 @@ export function useInView(
   return [ref, inView]
 }
 
-// ─── useScrollY
+// ─── useScrollY ────────────────────────────────────────────────
 
 export function useScrollY(): number {
   const [y, setY] = useState(0)
@@ -66,7 +66,7 @@ export function useScrollY(): number {
   return y
 }
 
-// ─── useScrollProgress
+// ─── useScrollProgress ─────────────────────────────────────────
 
 export function useScrollProgress(): number {
   const [p, setP] = useState(0)
@@ -88,41 +88,49 @@ export function useScrollProgress(): number {
   return p
 }
 
+// ─── useActiveSection ──────────────────────────────────────────
+// FIXED: Replaced getBoundingClientRect-on-scroll (forced reflow)
+// with IntersectionObserver — zero layout reads on every scroll tick.
+
 export function useActiveSection(ids: string[]): string {
   const [active, setActive] = useState(ids[0] || '')
 
   useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY < 100) {
-        setActive(ids[0])
-        return
+    if (!ids.length) return
+
+    // Keep a map of which sections are currently "visible"
+    const visibilityMap: Record<string, boolean> = {}
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          visibilityMap[entry.target.id] = entry.isIntersecting
+        })
+
+        // Pick the first visible section in document order
+        const firstVisible = ids.find((id) => visibilityMap[id])
+        if (firstVisible) setActive(firstVisible)
+      },
+      {
+        // Trigger when section enters top 20% of viewport
+        rootMargin: '-10% 0px -80% 0px',
+        threshold: 0,
       }
-      let closest = ids[0]
-      let minDist = Infinity
+    )
 
-      ids.forEach(id => {
-        const el = document.getElementById(id)
-        if (!el) return
-        const top = el.getBoundingClientRect().top
-        const dist = Math.abs(top - 80)
-        if (dist < minDist) {
-          minDist = dist
-          closest = id
-        }
-      })
+    // Observe all sections
+    ids.forEach((id) => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
 
-      setActive(closest)
-    }
-
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => observer.disconnect()
   }, [ids.join(',')])
 
   return active
 }
 
-// ─── useTyped
+// ─── useTyped ──────────────────────────────────────────────────
 
 interface TypedOptions {
   typeSpeed?: number

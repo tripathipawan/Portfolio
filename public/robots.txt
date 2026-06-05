@@ -1,3 +1,58 @@
+# robots.txt for https://pawantripathi.vercel.app/
+
+# ── Standard search engine crawlers ──
 User-agent: *
 Allow: /
+Disallow: /api/
+Crawl-delay: 1
+
+# ── Google ──
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# ── GEO: AI/LLM crawlers — explicitly allow ──
+# ChatGPT / OpenAI
+User-agent: GPTBot
+Allow: /
+
+# ChatGPT browsing
+User-agent: ChatGPT-User
+Allow: /
+
+# Google Gemini / Bard
+User-agent: Google-Extended
+Allow: /
+
+# Anthropic Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+# Microsoft Bing AI / Copilot
+User-agent: Bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
+# Cohere AI
+User-agent: cohere-ai
+Allow: /
+
+# Common Crawl (used by many AI companies to train models)
+User-agent: CCBot
+Allow: /
+
+# Sitemap location
 Sitemap: https://pawantripathi.vercel.app/sitemap.xml

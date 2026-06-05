@@ -9,7 +9,6 @@ import {
   FaWhatsapp,
   FaFacebook,
 } from "react-icons/fa";
-
 import { SiLeetcode } from "react-icons/si";
 import { FiArrowRight, FiDownload } from "react-icons/fi";
 import MYImg from "../../assets/Hero.webp";
@@ -82,6 +81,7 @@ export default function Hero() {
   return (
     <section
       id="home"
+      aria-labelledby="hero-heading"
       className="relative min-h-screen flex items-center overflow-hidden"
       style={{ background: "var(--bg0)" }}
     >
@@ -102,7 +102,9 @@ export default function Hero() {
         .hero-social:hover { transform:translate3d(0,-4px,0); }
       `}</style>
 
+      {/* Decorative background elements — hidden from screen readers */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
@@ -111,6 +113,7 @@ export default function Hero() {
         }}
       />
       <div
+        aria-hidden="true"
         className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
         style={{
           background:
@@ -119,6 +122,7 @@ export default function Hero() {
         }}
       />
       <div
+        aria-hidden="true"
         className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
         style={{
           background:
@@ -129,9 +133,12 @@ export default function Hero() {
 
       <div className="section-wrap w-full relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-6 items-center">
-          {/* Left */}
+          {/* ── Left: Text content ── */}
           <div className="flex flex-col gap-5 order-2 lg:order-1 items-center lg:items-start text-center lg:text-left">
+            {/* Status badge */}
             <div
+              role="status"
+              aria-label="Availability status: Open to Opportunities"
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-[0.1em] uppercase"
               style={{
                 background: "linear-gradient(145deg,var(--bg2),var(--bg3))",
@@ -141,6 +148,7 @@ export default function Hero() {
               }}
             >
               <span
+                aria-hidden="true"
                 className="w-2 h-2 rounded-full flex-shrink-0"
                 style={{
                   background: "var(--green)",
@@ -151,7 +159,9 @@ export default function Hero() {
               {personal.status}
             </div>
 
+            {/* ── FIXED: h1 with proper id for aria-labelledby ── */}
             <h1
+              id="hero-heading"
               className="font-black leading-[1.05] tracking-tight text-[clamp(2.6rem,6.5vw,4.8rem)]"
               style={{ fontFamily: "var(--font)", color: "var(--text1)" }}
             >
@@ -159,22 +169,27 @@ export default function Hero() {
               <span className="g-text">{personal.name}</span>
             </h1>
 
+            {/* Typewriter role title — aria-live so screen readers announce changes */}
             <div className="flex items-center gap-3 justify-center lg:justify-start">
               <div
+                aria-hidden="true"
                 className="w-8 h-[2px] rounded-full flex-shrink-0"
                 style={{ background: "var(--accent)" }}
               />
-              <span
+              <p
+                aria-live="polite"
+                aria-label={`Current role: ${typed || phrases[0]}`}
                 className="text-base font-semibold"
                 style={{
                   color: "var(--text2)",
                   fontFamily: "var(--mono)",
                   minWidth: 200,
+                  margin: 0,
                 }}
               >
                 {typed}
-                <span className="cursor" />
-              </span>
+                <span aria-hidden="true" className="cursor" />
+              </p>
             </div>
 
             <p
@@ -184,6 +199,7 @@ export default function Hero() {
               {personal.bio}
             </p>
 
+            {/* CTA Buttons */}
             <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
               <a
                 href="#projects"
@@ -193,8 +209,9 @@ export default function Hero() {
                     "linear-gradient(135deg,var(--accent),var(--accent-h))",
                   boxShadow: "0 4px 20px var(--accent-glow)",
                 }}
+                aria-label="View Pawan Tripathi's projects"
               >
-                View Projects <FiArrowRight size={14} />
+                View Projects <FiArrowRight size={14} aria-hidden="true" />
               </a>
               <a
                 href={Resume.link}
@@ -207,15 +224,22 @@ export default function Hero() {
                   border: "1px solid var(--border)",
                   color: "var(--text1)",
                 }}
+                aria-label="Download Pawan Tripathi's CV (opens in new tab)"
               >
-                <FiDownload size={14} /> Download CV
+                <FiDownload size={14} aria-hidden="true" /> Download CV
               </a>
             </div>
 
-            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+            {/* Stats */}
+            <div
+              className="flex flex-wrap gap-3 justify-center lg:justify-start"
+              role="list"
+              aria-label="Portfolio statistics"
+            >
               {stats.map((s) => (
                 <div
                   key={s.label}
+                  role="listitem"
                   className="flex flex-col items-center px-5 py-3 rounded-2xl"
                   style={{
                     background: "linear-gradient(145deg,var(--bg2),var(--bg3))",
@@ -226,10 +250,12 @@ export default function Hero() {
                   <span
                     className="font-black text-xl g-text leading-none"
                     style={{ fontFamily: "var(--font)" }}
+                    aria-label={`${s.value} ${s.label}`}
                   >
                     {s.value}
                   </span>
                   <span
+                    aria-hidden="true"
                     className="text-[10px] font-semibold uppercase tracking-wider mt-1"
                     style={{ color: "var(--text3)" }}
                   >
@@ -239,7 +265,12 @@ export default function Hero() {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+            {/* Social Links */}
+            <div
+              className="flex flex-wrap gap-2 justify-center lg:justify-start"
+              role="list"
+              aria-label="Social media links"
+            >
               {socials.map((s) => {
                 const Icon = SOCIAL_ICONS[s.icon];
                 return (
@@ -248,7 +279,8 @@ export default function Hero() {
                     href={s.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    title={s.name}
+                    aria-label={`Visit Pawan Tripathi on ${s.name} (opens in new tab)`}
+                    role="listitem"
                     className="hero-social w-9 h-9 rounded-xl flex items-center justify-center"
                     style={{
                       background:
@@ -258,20 +290,21 @@ export default function Hero() {
                       color: s.color,
                     }}
                   >
-                    {Icon && <Icon size={14} />}
+                    {Icon && <Icon size={14} aria-hidden="true" />}
                   </a>
                 );
               })}
             </div>
           </div>
 
-          {/* Right: Image */}
+          {/* ── Right: Profile Image ── */}
           <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
             <div
               className="relative"
               style={{ width: "min(100%,420px)", padding: "1.5rem" }}
             >
               <div
+                aria-hidden="true"
                 className="absolute inset-0 rounded-3xl blur-3xl pointer-events-none"
                 style={{
                   background:
@@ -287,7 +320,7 @@ export default function Hero() {
                   borderRadius: "2.1rem",
                 }}
               >
-                <div className="hero-card-glow" />
+                <div aria-hidden="true" className="hero-card-glow" />
                 <div
                   ref={imgRef}
                   className="hero-card relative rounded-[2rem] overflow-hidden z-10"
@@ -299,22 +332,27 @@ export default function Hero() {
                   onMouseMove={handleMouseMove}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="spotlight" />
+                  <div aria-hidden="true" className="spotlight" />
                   <div className="hero-card-img relative overflow-hidden">
                     <div
+                      aria-hidden="true"
                       className="absolute inset-0 z-10 pointer-events-none"
                       style={{
                         background:
                           "linear-gradient(to bottom,transparent 55%,rgba(10,13,22,0.97) 100%)",
                       }}
                     />
+                    {/* ── FIXED: descriptive alt text ── */}
                     <img
                       src={MYImg}
-                      alt={personal.name}
+                      alt="Pawan Tripathi — Frontend Developer from Uttarakhand, India"
                       className="w-full object-cover object-top block"
                       style={{ aspectRatio: "4/5" }}
                       loading="eager"
                       decoding="async"
+                      fetchPriority="high"
+                      width={360}
+                      height={450}
                     />
                   </div>
                   <div
@@ -326,6 +364,7 @@ export default function Hero() {
                     }}
                   >
                     <div
+                      aria-hidden="true"
                       className="w-8 h-[2px] rounded-full mb-1"
                       style={{
                         background:
@@ -360,7 +399,9 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* Scroll indicator — decorative */}
       <div
+        aria-hidden="true"
         className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 pointer-events-none"
         style={{ opacity: 0.35 }}
       >

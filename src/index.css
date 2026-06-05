@@ -15,8 +15,12 @@ body {
   --sh-d: rgba(0, 0, 0, 0.8);
   --sh-l: rgba(255, 255, 255, 0.035);
   --text1: #eef0f8;
-  --text2: #8d98b5;
-  --text3: #3a4258;
+
+  /* ── FIXED: text2 contrast improved from #8d98b5 → #a0aac5 (4.5:1 on dark bg) ── */
+  --text2: #a0aac5;
+  /* ── FIXED: text3 contrast improved from #3a4258 → #6b7898 ── */
+  --text3: #6b7898;
+
   --accent: #6366f1;
   --accent-h: #818cf8;
   --accent-glow: rgba(99, 102, 241, 0.35);
@@ -41,8 +45,10 @@ body {
   --sh-d: rgba(150, 165, 185, 0.55);
   --sh-l: rgba(255, 255, 255, 0.95);
   --text1: #080c18;
-  --text2: #4a5370;
-  --text3: #8892aa;
+  /* ── FIXED: light mode text2 contrast improved from #4a5370 → #3d4a6b ── */
+  --text2: #3d4a6b;
+  /* ── FIXED: light mode text3 improved from #8892aa → #5c6480 ── */
+  --text3: #5c6480;
   --border: rgba(0, 0, 0, 0.07);
   --border-c: rgba(0, 0, 0, 0.12);
   --border-h: rgba(99, 102, 241, 0.4);
@@ -100,6 +106,48 @@ button {
   border: none;
   background: none;
   font-family: inherit;
+}
+
+/* ── Accessibility: Screen reader only utility ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Accessibility: Focus-visible styles (keyboard nav) ── */
+:focus-visible {
+  outline: 2px solid var(--accent-h);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Accessibility: Reduce motion for users who prefer it ── */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .marquee-track {
+    animation: none !important;
+  }
+
+  .rv {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -271,7 +319,9 @@ button {
 }
 
 .field::placeholder {
+  /* ── FIXED: placeholder contrast improved ── */
   color: var(--text3);
+  opacity: 1;
 }
 
 .field:focus {
