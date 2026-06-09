@@ -1,171 +1,72 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef, useState } from 'react'
+import { useState, useEffect, useRef } from "react";
 
-// ─── useCSSReveal ──────────────────────────────────────────────
-
-export function useCSSReveal(
-  selector: string,
-  rootRef: React.RefObject<Element> | null = null
-): void {
-  useEffect(() => {
-    const root = rootRef?.current ?? document
-    const els = root.querySelectorAll(selector)
-    if (!els.length) return
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in')
-          io.unobserve(e.target)
-        }
-      })
-    }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' })
-    els.forEach(el => io.observe(el))
-    return () => io.disconnect()
-  }, [])
-}
-
-// ─── useInView ─────────────────────────────────────────────────
-
-interface InViewOptions {
-  threshold?: number
-  margin?: string
-}
-
-export function useInView(
-  opts: InViewOptions = {}
-): [React.RefObject<HTMLElement | null>, boolean] {
-  const ref = useRef<HTMLElement>(null)
-  const [inView, setInView] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { setInView(true); io.unobserve(el) }
-    }, { threshold: opts.threshold ?? 0.08, rootMargin: opts.margin ?? '0px 0px -40px 0px' })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  return [ref, inView]
-}
-
-// ─── useScrollY ────────────────────────────────────────────────
-
-export function useScrollY(): number {
-  const [y, setY] = useState(0)
-  const ticking = useRef(false)
-  useEffect(() => {
-    const h = () => {
-      if (!ticking.current) {
-        requestAnimationFrame(() => { setY(window.scrollY); ticking.current = false })
-        ticking.current = true
-      }
-    }
-    window.addEventListener('scroll', h, { passive: true })
-    return () => window.removeEventListener('scroll', h)
-  }, [])
-  return y
-}
-
-// ─── useScrollProgress ─────────────────────────────────────────
-
-export function useScrollProgress(): number {
-  const [p, setP] = useState(0)
-  const ticking = useRef(false)
-  useEffect(() => {
-    const h = () => {
-      if (!ticking.current) {
-        requestAnimationFrame(() => {
-          const tot = document.documentElement.scrollHeight - window.innerHeight
-          setP(tot > 0 ? Math.min(window.scrollY / tot, 1) : 0)
-          ticking.current = false
-        })
-        ticking.current = true
-      }
-    }
-    window.addEventListener('scroll', h, { passive: true })
-    return () => window.removeEventListener('scroll', h)
-  }, [])
-  return p
-}
-
-// ─── useActiveSection ──────────────────────────────────────────
-// FIXED: Replaced getBoundingClientRect-on-scroll (forced reflow)
-// with IntersectionObserver — zero layout reads on every scroll tick.
-
-export function useActiveSection(ids: string[]): string {
-  const [active, setActive] = useState(ids[0] || '')
+const useActiveSection = (sectionIds: string[]): string => {
+  const [activeSection, setActiveSection] = useState<string>(sectionIds[0]);
+  const isManualScroll = useRef(false);
 
   useEffect(() => {
-    if (!ids.length) return
-
-    // Keep a map of which sections are currently "visible"
-    const visibilityMap: Record<string, boolean> = {}
-
+    if (sectionIds.length === 0) return;
     const observer = new IntersectionObserver(
       (entries) => {
+        if (isManualScroll.current) return;
         entries.forEach((entry) => {
-          visibilityMap[entry.target.id] = entry.isIntersecting
-        })
-
-        // Pick the first visible section in document order
-        const firstVisible = ids.find((id) => visibilityMap[id])
-        if (firstVisible) setActive(firstVisible)
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
       },
       {
-        // Trigger when section enters top 20% of viewport
-        rootMargin: '-10% 0px -80% 0px',
-        threshold: 0,
+        rootMargin: "-80px 0px -35% 0px",
+        threshold: 0.1,
       }
-    )
+    );
 
-    // Observe all sections
-    ids.forEach((id) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    const handleScroll = () => {
+      if (isManualScroll.current) return;
 
-    return () => observer.disconnect()
-  }, [ids.join(',')])
+      const NAVBAR_HEIGHT = 90;
+      let closestId = sectionIds[0];
+      let closestDistance = Infinity;
 
-  return active
-}
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const distanceFromTop = Math.abs(rect.top - NAVBAR_HEIGHT);
+        if (rect.top <= NAVBAR_HEIGHT + 10 && distanceFromTop < closestDistance) {
+          closestDistance = distanceFromTop;
+          closestId = id;
+        }
+      });
 
-// ─── useTyped ──────────────────────────────────────────────────
+      setActiveSection(closestId);
+    };
 
-interface TypedOptions {
-  typeSpeed?: number
-  deleteSpeed?: number
-  pauseMs?: number
-}
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-export function useTyped(
-  phrases: string[],
-  { typeSpeed = 90, deleteSpeed = 50, pauseMs = 2000 }: TypedOptions = {}
-): string {
-  const [text, setText] = useState('')
-  const [pi, setPi] = useState(0)
-  const [ci, setCi] = useState(0)
-  const [del, setDel] = useState(false)
-  const [paused, setPaused] = useState(false)
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [sectionIds]);
+
+  return activeSection;
+};
+
+const useScrollY = (): number => {
+  const [scrollY, setScrollY] = useState(0);
+
   useEffect(() => {
-    if (paused) {
-      const t = setTimeout(() => { setPaused(false); setDel(true) }, pauseMs)
-      return () => clearTimeout(t)
-    }
-    const phrase = phrases[pi]
-    const delay = del ? deleteSpeed : typeSpeed
-    const timer = setTimeout(() => {
-      if (!del) {
-        setText(phrase.substring(0, ci + 1))
-        if (ci + 1 === phrase.length) setPaused(true)
-        else setCi(c => c + 1)
-      } else {
-        setText(phrase.substring(0, ci - 1))
-        if (ci - 1 <= 0) { setDel(false); setCi(0); setPi(i => (i + 1) % phrases.length) }
-        else setCi(c => c - 1)
-      }
-    }, delay)
-    return () => clearTimeout(timer)
-  }, [ci, del, paused, pi, phrases, typeSpeed, deleteSpeed, pauseMs])
-  return text
-}
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return scrollY;
+};
+
+export { useActiveSection, useScrollY };
