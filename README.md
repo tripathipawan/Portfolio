@@ -369,7 +369,7 @@ My_Personal_Portfolio/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/tripathipawan/My_Personal_Portfolio.git
+git clone https://github.com/tripathipawan/Portfolio.git
 cd My_Personal_Portfolio
 
 # 2. Install dependencies
@@ -396,4 +396,4 @@ npm run preview   # Preview the production build
 
 ## Repository
 
-[https://github.com/tripathipawan/My_Personal_Portfolio](https://github.com/tripathipawan/My_Personal_Portfolio)
+[https://github.com/tripathipawan/Portfolio](https://github.com/tripathipawan/Portfolio)

@@ -174,9 +174,35 @@ export const certifications = [
     icon: "🏅",
     URL: "https://www.codechef.com/certificates/public/5292983",
   },
+  {
+    id: 3,
+    name: "React.Js ",
+    platform: "Simplilearn",
+    year: "2026",
+    color: "#f43f5e",
+    icon: "🏅",
+    URL: "https://simpli-web.app.link/e/6HuscrCV03b",
+  },
+  {
+    id: 4,
+    name: "Front End Development",
+    platform: "Simplilearn",
+    year: "2026",
+    color: "#38bdf8",
+    icon: "🏅",
+    URL: "https://simpli-web.app.link/e/5z6MY9nI33b",
+  },
+    {
+    id: 2,
+    name: "Github Copilot Fundamentals",
+    platform: "Microsoft",
+    year: "2026",
+    color: "#ffe000",
+    icon: "🏅",
+    URL: "https://simpli-web.app.link/e/gUKkBxqI33b",
+  },
 ]
 
- 
 // ─── Services ────────────────────────────────────────────────────────────────
 export const services = [
   {
