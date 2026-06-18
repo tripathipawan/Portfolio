@@ -11,7 +11,7 @@ export const personal = {
 }
 
 export const Resume = {
-  link: "https://drive.google.com/file/d/1i9TuuYxC3hXcdf8Ispy9USfuj-iPiMan/view?usp=drivesdk",
+  link: "https://drive.google.com/file/d/1xCrur3mdGqgmyvSN4CvuOlW0LSJtp_aE/view?usp=drivesdk",
 }
 
 export const phrases = [
