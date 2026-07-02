@@ -102,9 +102,21 @@ export function ScrollToTop() {
 }
 
 function smoothScroll(id: string): void {
-  const el = document.getElementById(id);
-  if (!el) return;
-  window.scrollTo({ top: el.offsetTop - 64, behavior: "smooth" });
+  const scrollNow = () => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    const top = el.getBoundingClientRect().top + window.scrollY - 64;
+    window.scrollTo({ top, behavior: "smooth" });
+    return true;
+  };
+
+  if (scrollNow()) return;
+
+  let attempts = 0;
+  const interval = setInterval(() => {
+    attempts++;
+    if (scrollNow() || attempts > 15) clearInterval(interval);
+  }, 100);
 }
 
 function MarqueeSection() {
